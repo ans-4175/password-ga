@@ -6,8 +6,8 @@ main {
 wired-card {
   max-width: 600px;
   margin: 0 auto;
-  /* padding: 20px; */
-  /* display: block; */
+  padding: 20px;
+  display: block;
 }
 
 section {
