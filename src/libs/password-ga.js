@@ -8,6 +8,7 @@ const NUM_TYPE = "num";
 
 const MUTATE_THRESHOLD_LETTERS = 0.9696;
 const MUTATE_THRESHOLD_CASES = 0.8686;
+const GENERATION_THRESHOLD_FITNESS = 0;
 
 const checkGeneType = (char) => {
     if (vocalset.includes(char))
@@ -44,19 +45,31 @@ const generateChromosome = (chromLength) => {
 
 const checkFitnessScore = (chromosome) => {
     //  rule1: consonant or vocal cannot be in double occurences sequentially
-    let score = 10 * chromosome.length;
+    //  rule2: if upperCases exist then plus score
+    //  rule3: if numbers exist then plus score
+    let score = 10 * chromosome.length; // baseScoreline
     let lastGeneType = "";
     let lastGeneSeqCount = 1;
 
+    let isUpperExist = false;
+    let isNumberExist = false;
+
     chromosome.split("").forEach(gene => {
+        // rule 1
         if (checkGeneType(gene) === lastGeneType) ++lastGeneSeqCount;
-        // console.log(gene, lastGeneType, lastGeneSeqCount);
         if (lastGeneSeqCount > 1) {
             score = score - 10;
             lastGeneSeqCount = 1;
         }
         lastGeneType = checkGeneType(gene);
+        // rule 2
+        if (gene === gene.toUpperCase() && !(gene >= '0' && gene <= '9') &&(gene >='A' && gene <= 'Z')) isUpperExist = true;
+        // rule 3
+        if (gene === gene.toUpperCase() && (gene >= '0' && gene <= '9')) isNumberExist = true;
     });
+
+    if (isUpperExist) score += 10;
+    if (isNumberExist) score += 10;
 
     return score;
 }
@@ -128,17 +141,31 @@ const survivalFittest = (population, maxPopulation) => {
     }).slice(0, maxPopulation);
 }
 
+const getMinMax = (arr) => {
+    let min = arr[0];
+    let max = arr[0];
+    let i = arr.length;
+        
+    while (i--) {
+        min = arr[i] < min ? arr[i] : min;
+        max = arr[i] > max ? arr[i] : max;
+    }
+    return { min, max };
+}
+
 const generatePasswords = ({
         chromosomeLength = 12, maxPopulation = 33,
-        generations = 20, pickCount = 1
+        stayGen = 3, pickCount = 1
     }) => {
 
     // logic password generator, by genetic programming
     // initialize population by random chars
     let population = [...Array(maxPopulation)].map((_) => generateChromosome(chromosomeLength));
     population = survivalFittest(population);
-    let currGeneration = 0;
-    while (currGeneration <= generations) {
+    // let currGeneration = 1;
+    let strongGeneration = 0;
+    let nextGen = true;
+    while (nextGen) {
         // prepare population to be mated
         const half = Math.ceil(population.length / 2);
         const firstHalf = population.slice(0, half);
@@ -152,10 +179,19 @@ const generatePasswords = ({
         // sort by fitness score
         population = survivalFittest(population, maxPopulation);
 
-        currGeneration++;
+        // check generation convergence
+        const { min, max } = getMinMax(population.map(chrom => checkFitnessScore(chrom)));
+        if (max-min <= GENERATION_THRESHOLD_FITNESS) {
+            strongGeneration++;
+            if (strongGeneration > stayGen) nextGen = false;
+        } else {
+            strongGeneration = 0;
+        }
+        // currGeneration++;
     }
     // pick population
     return pickNRandom(population, pickCount);
 }
 
-export default generatePasswords;
+module.exports = { generatePasswords };
+// export default generatePasswords;

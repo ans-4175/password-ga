@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
 import { WiredButton, WiredCard, WiredInput } from "wired-elements-react";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import generatePasswords from "./libs/password-ga";
-
 import "./App.css";
 
+const { generatePasswords } = require("./libs/password-ga");
+
 function App() {
-  let textInput = useRef({});
+  const boxCard = useRef({});
+  const textInput = useRef({});
   const [password, setPassword] = useState([]);
   const [passwordLoaded, setPasswordLoaded] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -20,6 +21,7 @@ function App() {
       setPasswordLoaded(true);
       textInput.current.value = res[0];
     }
+    boxCard.current.requestUpdate();
   }
 
   useEffect(() => {
@@ -30,7 +32,7 @@ function App() {
 
   return (
     <main>
-      <WiredCard elevation={3}>
+      <WiredCard elevation={3} ref={boxCard}>
         <h1>Password Generator</h1>
         {!passwordLoaded ? 
         (<p>Loading</p>) : (
@@ -53,7 +55,7 @@ function App() {
                 Copy
               </WiredButton>
             </CopyToClipboard>
-            {copied && <div className="copied">copied</div>}
+            <div className="copied">{copied ? "copied" : ""}</div>
           </section>
           </>
         )}
