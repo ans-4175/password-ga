@@ -11,19 +11,20 @@ function App() {
   const [passwordLoaded, setPasswordLoaded] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  // function handleClick(text) {
-  //   // window.alert(`Hello ${textInput.current.value}!`);
-  // }
+  const reGenerate = async () => {
+    const res = generatePasswords({});
+    setPasswordLoaded(false);
+    setCopied(false);
+    if (res.length) {
+      setPassword(res[0]);
+      setPasswordLoaded(true);
+      textInput.current.value = res[0];
+    }
+  }
 
   useEffect(() => {
     (async () => {
-      setPasswordLoaded(false);
-      setCopied(false);
-      let res = generatePasswords({});
-      if (res.length) {
-        setPassword(res[0]);
-        setPasswordLoaded(true);
-      }
+      await reGenerate();
     })();
   }, []);
 
@@ -41,18 +42,18 @@ function App() {
             value={password}
             ref={textInput}
           />
-          {/* <WiredButton elevation={2} onClick={handleClick('generate')}>
+          <WiredButton elevation={2} onClick={() => reGenerate()}>
             Re-Gen
-          </WiredButton> */}
+          </WiredButton>
           </section>
           <section>
             <CopyToClipboard text={password}
               onCopy={() => setCopied(true)}>
-              <WiredButton class="btn-copy" elevation={2}>
+              <WiredButton className="btn-copy" elevation={2}>
                 Copy
               </WiredButton>
             </CopyToClipboard>
-            {copied ? <div style={{color: 'darkolivegreen'}}>Copied.</div> : null}
+            {copied && <div className="copied">copied</div>}
           </section>
           </>
         )}

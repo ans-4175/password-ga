@@ -35,3 +35,7 @@ wired-input {
     monospace;
   letter-spacing: 0.5em;
 }
+
+.copied {
+  color: darkolivegreen;
+}
