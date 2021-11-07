@@ -6,14 +6,14 @@ main {
 wired-card {
   max-width: 600px;
   margin: 0 auto;
-  padding: 20px;
-  display: block;
+  /* padding: 20px; */
+  /* display: block; */
 }
 
 section {
   max-width: 400px;
   margin: 0 auto;
-  padding: 40px 0;
+  padding: 20px 0;
 }
 
 wired-button {
