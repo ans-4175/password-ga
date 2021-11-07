@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import { WiredButton, WiredCard, WiredInput } from "wired-elements-react";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import "./App.css";
+import generatePasswords from './libs/password-ga';
 
-const { generatePasswords } = require("./libs/password-ga");
+import "./App.css";
 
 function App() {
   const boxCard = useRef({});

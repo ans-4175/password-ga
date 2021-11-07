@@ -193,5 +193,5 @@ const generatePasswords = ({
     return pickNRandom(population, pickCount);
 }
 
-module.exports = { generatePasswords };
-// export default generatePasswords;
+// module.exports = { generatePasswords };
+export default generatePasswords;
