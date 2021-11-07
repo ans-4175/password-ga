@@ -12,9 +12,9 @@ function App() {
   const [copied, setCopied] = useState(false);
 
   const reGenerate = async () => {
-    const res = generatePasswords({});
     setPasswordLoaded(false);
     setCopied(false);
+    const res = await generatePasswords({});
     if (res.length) {
       setPassword(res[0]);
       setPasswordLoaded(true);
