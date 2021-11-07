@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { WiredButton, WiredCard, WiredInput } from "wired-elements-react";
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import generatePasswords from "./libs/password-ga";
 
 import "./App.css";
@@ -8,6 +9,7 @@ function App() {
   let textInput = useRef({});
   const [password, setPassword] = useState([]);
   const [passwordLoaded, setPasswordLoaded] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   // function handleClick(text) {
   //   // window.alert(`Hello ${textInput.current.value}!`);
@@ -16,7 +18,8 @@ function App() {
   useEffect(() => {
     (async () => {
       setPasswordLoaded(false);
-      let res = await generatePasswords({});
+      setCopied(false);
+      let res = generatePasswords({});
       if (res.length) {
         setPassword(res[0]);
         setPasswordLoaded(true);
@@ -43,9 +46,13 @@ function App() {
           </WiredButton> */}
           </section>
           <section>
-            <WiredButton class="btn-copy" elevation={2}>
-              Copy
-            </WiredButton>          
+            <CopyToClipboard text={password}
+              onCopy={() => setCopied(true)}>
+              <WiredButton class="btn-copy" elevation={2}>
+                Copy
+              </WiredButton>
+            </CopyToClipboard>
+            {copied ? <div style={{color: 'darkolivegreen'}}>Copied.</div> : null}
           </section>
           </>
         )}
