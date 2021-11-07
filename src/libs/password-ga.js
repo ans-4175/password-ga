@@ -144,15 +144,14 @@ const generatePasswords = ({
         const firstHalf = population.slice(0, half);
         const secondHalf = population.slice(-half);
         // breeding new
+        const newPopulation = []
         firstHalf.forEach(candidate => {
-            population.push(geneticProcess(candidate, pickOneRandom(secondHalf)));
+            newPopulation.push(geneticProcess(candidate, pickOneRandom(secondHalf)));
         });
+        population = [...population, ...newPopulation];
         // sort by fitness score
         population = survivalFittest(population, maxPopulation);
-        // console.log("====", currGeneration);
-        // population.forEach(p => {
-        //     console.log(p, checkFitnessScore(p));
-        // });
+
         currGeneration++;
     }
     // pick population
