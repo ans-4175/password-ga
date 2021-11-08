@@ -39,3 +39,8 @@ wired-input {
 .copied {
   color: darkolivegreen;
 }
+
+.toggle-kata {
+  font-size: 12px;
+  margin: 0 10px;
+}
