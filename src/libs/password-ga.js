@@ -7,6 +7,7 @@ const CONSONANT_TYPE = "const";
 const NUM_TYPE = "num";
 
 const MUTATE_THRESHOLD_LETTERS = 0.9696;
+const MUTATE_THRESHOLD_SYMBOLS = 0.9696;
 const MUTATE_THRESHOLD_CASES = 0.8686;
 const GENERATION_THRESHOLD_FITNESS = 0;
 
@@ -47,12 +48,16 @@ const checkFitnessScore = (chromosome) => {
     //  rule1: consonant or vocal cannot be in double occurences sequentially
     //  rule2: if upperCases exist then plus score
     //  rule3: if numbers exist then plus score
+    //  rule4: if symbols exist then plus score
     let score = 10 * chromosome.length; // baseScoreline
     let lastGeneType = "";
     let lastGeneSeqCount = 1;
 
     let isUpperExist = false;
     let isNumberExist = false;
+    let isSymbolExist = false;
+
+    const symbolFormat = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 
     chromosome.split("").forEach(gene => {
         // rule 1
@@ -66,49 +71,80 @@ const checkFitnessScore = (chromosome) => {
         if (gene === gene.toUpperCase() && !(gene >= '0' && gene <= '9') &&(gene >='A' && gene <= 'Z')) isUpperExist = true;
         // rule 3
         if (gene === gene.toUpperCase() && (gene >= '0' && gene <= '9')) isNumberExist = true;
+        // rule 4
+        if (gene === gene.toUpperCase() && (symbolFormat.test(gene))) isSymbolExist = true;
     });
 
     if (isUpperExist) score += 10;
     if (isNumberExist) score += 10;
+    if (isSymbolExist) score += 10;
 
+    // console.log(chromosome, score);
     return score;
 }
 
-const mutateCases = (chromosome) => {
+const mutate = (chromosome, threshold, mutateFunction) => {
     return chromosome.split("").map(gene => {
-        return (Math.random() < MUTATE_THRESHOLD_CASES ? gene.toLowerCase() : gene.toUpperCase());
+        return (Math.random() < threshold ? mutateFunction(gene, false) : mutateFunction(gene, true));
     }).join("");
 }
 
-const mutationLetters = (gene) => {
-    switch (gene.toLowerCase()) {
-        case "i":
-            return "1";
-        case "r":
-            return "2"
-        case "e":
-            return "3"
-        case "a":
-            return "4"
-        case "s":
-            return "5"
-        case "g":
-            return "6"
-        case "z":
-            return "7"
-        case "b":
-            return "8"
-        case "q":
-            return "9"
-        default:
-            return gene
+const mutationCases = (gene, condition = true) => {
+    if (condition) {
+        return gene.toUpperCase();
+    } else {
+        return gene.toLowerCase();
     }
 }
 
-const mutateLetters = (chromosome) => {
-    return chromosome.split("").map(gene => {
-        return (Math.random() < MUTATE_THRESHOLD_LETTERS ? gene : mutationLetters(gene));
-    }).join("");
+const mutationLetters = (gene, condition = true) => {
+    if (condition) {
+        switch (gene.toLowerCase()) {
+            case "i":
+                return "1";
+            case "r":
+                return "2"
+            case "e":
+                return "3"
+            case "a":
+                return "4"
+            case "s":
+                return "5"
+            case "g":
+                return "6"
+            case "z":
+                return "7"
+            case "b":
+                return "8"
+            case "q":
+                return "9"
+            default:
+                return gene
+        }
+    } else {
+        return gene;
+    }
+}
+
+const mutationSymbols = (gene, condition = true) => {
+    if (condition) {
+        switch (gene.toLowerCase()) {
+            case "i":
+                return "!";
+            case "a":
+                return "@"
+            case "s":
+                return "$"
+            case "o":
+                return "*"
+            case "p":
+                return "?"
+            default:
+                return gene
+        }
+    } else {
+        return gene;
+    }
 }
 
 const geneticProcess = (firstGenes, secondGenes) => {
@@ -123,11 +159,14 @@ const geneticProcess = (firstGenes, secondGenes) => {
     let secondXOver = [...secondHalfFront, ...firstHalfLast].join("");
     
     // mutate letters to numbers
-    firstXOver = mutateLetters(firstXOver);
-    secondXOver = mutateLetters(secondXOver);
+    firstXOver = mutate(firstXOver, MUTATE_THRESHOLD_LETTERS, mutationLetters);
+    secondXOver = mutate(secondXOver, MUTATE_THRESHOLD_LETTERS, mutationLetters);
     // mutate cases
-    firstXOver = mutateCases(firstXOver);
-    secondXOver = mutateCases(secondXOver);
+    firstXOver = mutate(firstXOver, MUTATE_THRESHOLD_CASES, mutationCases);
+    secondXOver = mutate(secondXOver, MUTATE_THRESHOLD_CASES, mutationCases);
+    // mutate symbols
+    firstXOver = mutate(firstXOver, MUTATE_THRESHOLD_SYMBOLS, mutationSymbols);
+    secondXOver = mutate(secondXOver, MUTATE_THRESHOLD_SYMBOLS, mutationSymbols);
 
     if (checkFitnessScore(firstXOver) > checkFitnessScore(secondXOver))
         return firstXOver
@@ -193,5 +232,5 @@ const generatePasswords = ({
     return pickNRandom(population, pickCount);
 }
 
-// module.exports = { generatePasswords };
-export default generatePasswords;
+module.exports = generatePasswords;
+// export default generatePasswords;
