@@ -1,24 +1,10 @@
-const charset = "abcdefghijklmnopqrstuvwxyz";
-const consonantset = "bcdfghjklmnpqrstvwxyz";
-const vocalset = "aiueo";
-
-const VOCAL_TYPE = "vocal";
-const CONSONANT_TYPE = "const";
-const NUM_TYPE = "num";
+const KATA_BENDA = ['hotel','rumah','makam','botol','pisau','kerbau','meja','telepon','motor','gitar','pintu','kasur'];
+const KATA_SIFAT = ['panas','dingin','hebat','bersih','sehat','mantap','jagoan','sakti','gila','nikmat','lemah','kuat'];
 
 const MUTATE_THRESHOLD_LETTERS = 0.9696;
 const MUTATE_THRESHOLD_SYMBOLS = 0.9696;
 const MUTATE_THRESHOLD_CASES = 0.8686;
 const GENERATION_THRESHOLD_FITNESS = 0;
-
-const checkGeneType = (char) => {
-    if (vocalset.includes(char))
-        return VOCAL_TYPE;
-    else if (consonantset.includes(char))
-        return CONSONANT_TYPE;
-    else
-        return NUM_TYPE;
-}
 
 const pickOneRandom = (arr) => {
     return arr[Math.floor(Math.random() * arr.length)];
@@ -38,35 +24,42 @@ function pickNRandom(arr, n) {
     return result;
 }
 
-const generateChromosome = (chromLength) => {
-    return [...Array(chromLength)]
-              .map((_) => charset[Math.floor(Math.random() * charset.length)])
-              .join("");
+const getMinMax = (arr) => {
+    let min = arr[0];
+    let max = arr[0];
+    let i = arr.length;
+        
+    while (i--) {
+        min = arr[i] < min ? arr[i] : min;
+        max = arr[i] > max ? arr[i] : max;
+    }
+    return { min, max };
+}
+
+// ===IMPLEMENTED FUNCTION
+
+const generateChromosome = () => {
+    return [pickOneRandom(KATA_BENDA), pickOneRandom(KATA_SIFAT)];
+    // hacky things since chromosome should be in string, but can't use it on XOver
 }
 
 const checkFitnessScore = (chromosome) => {
-    //  rule1: consonant or vocal cannot be in double occurences sequentially
+    //  rule1: panjang chromosome kalau 10-12 score tinggi
     //  rule2: if upperCases exist then plus score
     //  rule3: if numbers exist then plus score
     //  rule4: if symbols exist then plus score
-    let score = 10 * chromosome.length; // baseScoreline
-    let lastGeneType = "";
-    let lastGeneSeqCount = 1;
+    const symbolFormat = "!@#$%^&*()_+{}|[]=-;:,./<>?";
+    let score = 100; // baseScoreline
 
+    let isLengthIdeal = false;
     let isUpperExist = false;
     let isNumberExist = false;
     let isSymbolExist = false;
 
-    const symbolFormat = "!@#$%^&*()_+{}|[]=-;:,./<>?";
+    // rule 1
+    if (chromosome.length >=10 && chromosome.length <= 12) isLengthIdeal = true;
 
     chromosome.split("").forEach(gene => {
-        // rule 1
-        if (checkGeneType(gene) === lastGeneType) ++lastGeneSeqCount;
-        if (lastGeneSeqCount > 1) {
-            score = score - 10;
-            lastGeneSeqCount = 1;
-        }
-        lastGeneType = checkGeneType(gene);
         // rule 2
         if (gene === gene.toUpperCase() && !(gene >= '0' && gene <= '9') &&(gene >='A' && gene <= 'Z')) isUpperExist = true;
         // rule 3
@@ -75,12 +68,19 @@ const checkFitnessScore = (chromosome) => {
         if (gene === gene.toUpperCase() && (symbolFormat.includes(gene))) isSymbolExist = true;
     });
 
+    if (isLengthIdeal) score += 20;
     if (isUpperExist) score += 10;
     if (isNumberExist) score += 10;
     if (isSymbolExist) score += 10;
 
     // console.log(chromosome, score);
     return score;
+}
+
+const survivalFittest = (population, maxPopulation) => {
+    return population.sort((a,b) => {
+        return checkFitnessScore(b.join("")) - checkFitnessScore(a.join(""));
+    }).slice(0, maxPopulation);
 }
 
 const mutate = (chromosome, threshold, mutateFunction) => {
@@ -149,47 +149,35 @@ const mutationSymbols = (gene, condition = true) => {
 
 const geneticProcess = (firstGenes, secondGenes) => {
     // breed new crossover
-    const randXOver = Math.ceil(Math.random() * firstGenes.length);
-    const firstHalfFront = firstGenes.slice(0, randXOver);
-    const firstHalfLast = firstGenes.slice(randXOver, firstGenes.length);
-    const secondHalfFront = secondGenes.slice(0, randXOver);
-    const secondHalfLast = secondGenes.slice(randXOver, secondGenes.length);
+    const firstHalfFront = firstGenes[0];
+    const firstHalfLast = firstGenes[1];
+    const secondHalfFront = secondGenes[0];
+    const secondHalfLast = secondGenes[1];
 
-    let firstXOver = [...firstHalfFront, ...secondHalfLast].join("");
-    let secondXOver = [...secondHalfFront, ...firstHalfLast].join("");
+    let firstXOver = [firstHalfFront, secondHalfLast];
+    let secondXOver = [secondHalfFront, firstHalfLast];
     
-    // mutate letters to numbers
-    firstXOver = mutate(firstXOver, MUTATE_THRESHOLD_LETTERS, mutationLetters);
-    secondXOver = mutate(secondXOver, MUTATE_THRESHOLD_LETTERS, mutationLetters);
-    // mutate cases
-    firstXOver = mutate(firstXOver, MUTATE_THRESHOLD_CASES, mutationCases);
-    secondXOver = mutate(secondXOver, MUTATE_THRESHOLD_CASES, mutationCases);
-    // mutate symbols
-    firstXOver = mutate(firstXOver, MUTATE_THRESHOLD_SYMBOLS, mutationSymbols);
-    secondXOver = mutate(secondXOver, MUTATE_THRESHOLD_SYMBOLS, mutationSymbols);
+    firstXOver = firstXOver.map(splitGene => {
+        let mutatedGene = splitGene;
+        mutatedGene = mutate(mutatedGene, MUTATE_THRESHOLD_LETTERS, mutationLetters);
+        mutatedGene = mutate(mutatedGene, MUTATE_THRESHOLD_CASES, mutationCases);
+        mutatedGene = mutate(mutatedGene, MUTATE_THRESHOLD_SYMBOLS, mutationSymbols);
 
-    if (checkFitnessScore(firstXOver) > checkFitnessScore(secondXOver))
+        return mutatedGene;
+    });
+    secondXOver = secondXOver.map(splitGene => {
+        let mutatedGene = splitGene;
+        mutatedGene = mutate(mutatedGene, MUTATE_THRESHOLD_LETTERS, mutationLetters);
+        mutatedGene = mutate(mutatedGene, MUTATE_THRESHOLD_CASES, mutationCases);
+        mutatedGene = mutate(mutatedGene, MUTATE_THRESHOLD_SYMBOLS, mutationSymbols);
+
+        return mutatedGene;
+    });
+
+    if (checkFitnessScore(firstXOver.join("")) > checkFitnessScore(secondXOver.join("")))
         return firstXOver
     else
         return secondXOver;
-}
-
-const survivalFittest = (population, maxPopulation) => {
-    return population.sort((a,b) => {
-        return checkFitnessScore(b) - checkFitnessScore(a);
-    }).slice(0, maxPopulation);
-}
-
-const getMinMax = (arr) => {
-    let min = arr[0];
-    let max = arr[0];
-    let i = arr.length;
-        
-    while (i--) {
-        min = arr[i] < min ? arr[i] : min;
-        max = arr[i] > max ? arr[i] : max;
-    }
-    return { min, max };
 }
 
 const generatePasswords = ({
@@ -199,7 +187,7 @@ const generatePasswords = ({
 
     // logic password generator, by genetic programming
     // initialize population by random chars
-    let population = [...Array(maxPopulation)].map((_) => generateChromosome(chromosomeLength));
+    let population = [...Array(maxPopulation)].map((_) => generateChromosome());
     population = survivalFittest(population);
     // let currGeneration = 1;
     let strongGeneration = 0;
@@ -219,7 +207,7 @@ const generatePasswords = ({
         population = survivalFittest(population, maxPopulation);
 
         // check generation convergence
-        const { min, max } = getMinMax(population.map(chrom => checkFitnessScore(chrom)));
+        const { min, max } = getMinMax(population.map(chrom => checkFitnessScore(chrom.join(""))));
         if (max-min <= GENERATION_THRESHOLD_FITNESS) {
             strongGeneration++;
             if (strongGeneration > stayGen) nextGen = false;
@@ -229,7 +217,7 @@ const generatePasswords = ({
         // currGeneration++;
     }
     // pick population
-    return pickNRandom(population, pickCount);
+    return pickNRandom(population, pickCount).map(chrom => chrom.join(""));
 }
 
 // module.exports = generatePasswords;

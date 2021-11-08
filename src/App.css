@@ -13,7 +13,7 @@ wired-card {
 section {
   max-width: 400px;
   margin: 0 auto;
-  padding: 40px 0;
+  padding: 20px 0;
 }
 
 wired-button {
@@ -38,4 +38,20 @@ wired-input {
 
 .copied {
   color: darkolivegreen;
+}
+
+.toggle-kata {
+  font-size: 12px;
+  margin: 0 10px;
+}
+
+.toggle-notes {
+  font-size: 10px;
+  color: darkorange;
+}
+
+.foot-notes {
+  font-size: 0.65em;
+  color: grey;
+  line-height: 140%;
 }
