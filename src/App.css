@@ -39,3 +39,19 @@ wired-input {
 .copied {
   color: darkolivegreen;
 }
+
+.toggle-kata {
+  font-size: 12px;
+  margin: 0 10px;
+}
+
+.toggle-notes {
+  font-size: 10px;
+  color: darkorange;
+}
+
+.foot-notes {
+  font-size: 0.65em;
+  color: grey;
+  line-height: 140%;
+}
