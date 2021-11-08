@@ -51,9 +51,7 @@ wired-input {
 }
 
 .foot-notes {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
   font-size: 0.65em;
-  color: darkolivegreen;
+  color: grey;
   line-height: 140%;
 }
