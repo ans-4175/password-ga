@@ -47,6 +47,7 @@ function App() {
             <span className="toggle-kata">kata acak</span>
             <WiredToggle checked={isKata} onChange={(e) => changeGenerator(e.detail.checked)}/>
             <span className="toggle-kata">kata benda</span>
+            <div className="toggle-notes">{isKata ? "beta version" : ""}</div>
           </section>
           <section>
             <WiredInput
@@ -68,6 +69,7 @@ function App() {
               </WiredButton>
             </CopyToClipboard>
           </section>
+          <div className="foot-notes">Copyright @ans4175</div>
           </>
         )}
       </WiredCard>

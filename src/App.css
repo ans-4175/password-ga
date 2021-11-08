@@ -44,3 +44,16 @@ wired-input {
   font-size: 12px;
   margin: 0 10px;
 }
+
+.toggle-notes {
+  font-size: 10px;
+  color: darkorange;
+}
+
+.foot-notes {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+  font-size: 0.65em;
+  color: darkolivegreen;
+  line-height: 140%;
+}
