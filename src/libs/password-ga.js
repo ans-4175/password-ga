@@ -57,7 +57,7 @@ const checkFitnessScore = (chromosome) => {
     let isNumberExist = false;
     let isSymbolExist = false;
 
-    const symbolFormat = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+    const symbolFormat = "!@#$%^&*()_+{}|[]=-;:,./<>?";
 
     chromosome.split("").forEach(gene => {
         // rule 1
@@ -72,7 +72,7 @@ const checkFitnessScore = (chromosome) => {
         // rule 3
         if (gene === gene.toUpperCase() && (gene >= '0' && gene <= '9')) isNumberExist = true;
         // rule 4
-        if (gene === gene.toUpperCase() && (symbolFormat.test(gene))) isSymbolExist = true;
+        if (gene === gene.toUpperCase() && (symbolFormat.includes(gene))) isSymbolExist = true;
     });
 
     if (isUpperExist) score += 10;

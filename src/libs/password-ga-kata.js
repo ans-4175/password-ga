@@ -48,7 +48,7 @@ const checkFitnessScore = (chromosome) => {
     //  rule2: if upperCases exist then plus score
     //  rule3: if numbers exist then plus score
     //  rule4: if symbols exist then plus score
-    const symbolFormat = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+    const symbolFormat = "!@#$%^&*()_+{}|[]=-;:,./<>?";
     let score = 100; // baseScoreline
 
     let isLengthIdeal = false;
@@ -65,7 +65,7 @@ const checkFitnessScore = (chromosome) => {
         // rule 3
         if (gene === gene.toUpperCase() && (gene >= '0' && gene <= '9')) isNumberExist = true;
         // rule 4
-        if (gene === gene.toUpperCase() && (symbolFormat.test(gene))) isSymbolExist = true;
+        if (gene === gene.toUpperCase() && (symbolFormat.includes(gene))) isSymbolExist = true;
     });
 
     if (isLengthIdeal) score += 20;
