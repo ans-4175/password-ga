@@ -7,5 +7,20 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
       - run: yarn
-      # This runs the `prettier` binary inside `node_modules/.bin`.
+      # Example output when there are unformatted files:
+      #
+      # yarn run v1.22.11
+      # $ /../password-ga/node_modules/.bin/prettier --check src
+      # Checking formatting...
+      # [warn] src/App.js
+      # [warn] Code style issues found in the above file(s). Forgot to run Prettier?
+      # error Command failed with exit code 1.
+      # info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+      #
+      # Example output when all files are formatted, this will exit with code 0:
+      #
+      # yarn run v1.22.11
+      # $ /../password-ga/node_modules/.bin/prettier --check src
+      # Checking formatting...
+      # All matched files use Prettier code style!
       - run: yarn prettier --check src
