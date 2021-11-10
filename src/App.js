@@ -17,7 +17,7 @@ function App() {
   const [password, setPassword] = useState([]);
   const [passwordLoaded, setPasswordLoaded] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [isKata, setIsKata] = useState(false)
+  const [isKata, setIsKata] = useState(false);
 
   const reGenerate = async () => {
     setPasswordLoaded(false);
