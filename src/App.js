@@ -1,10 +1,15 @@
-import React, { useEffect, useState, useRef } from "react";
-import { WiredButton, WiredCard, WiredInput, WiredToggle } from "wired-elements-react";
+import React, { useEffect, useState, useRef } from 'react';
+import {
+  WiredButton,
+  WiredCard,
+  WiredInput,
+  WiredToggle
+} from 'wired-elements-react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import generateAcak from './libs/password-ga';
 import generateKata from './libs/password-ga-kata';
 
-import "./App.css";
+import './App.css';
 
 function App() {
   const boxCard = useRef({});
@@ -25,11 +30,11 @@ function App() {
       textInput.current.value = res[0];
     }
     boxCard.current.requestUpdate();
-  }
+  };
 
   const changeGenerator = (isRight) => {
-    setIsKata((isRight) ? true : false);
-  }
+    setIsKata(isRight ? true : false);
+  };
 
   useEffect(() => {
     reGenerate();
@@ -40,36 +45,39 @@ function App() {
     <main>
       <WiredCard elevation={3} ref={boxCard}>
         <h1>Password Generator</h1>
-        {!passwordLoaded ? 
-        (<p>Loading</p>) : (
+        {!passwordLoaded ? (
+          <p>Loading</p>
+        ) : (
           <>
-          <section>
-            <span className="toggle-kata">kata acak</span>
-            <WiredToggle checked={isKata} onChange={(e) => changeGenerator(e.detail.checked)}/>
-            <span className="toggle-kata">kata benda</span>
-            <div className="toggle-notes">{isKata ? "beta version" : ""}</div>
-          </section>
-          <section>
-            <WiredInput
-              disabled={true}
-              placeholder="password here"
-              value={password}
-              ref={textInput}
-            />
-            <div className="copied">{copied ? "copied" : ""}</div>
-          </section>
-          <section>
-            <WiredButton elevation={2} onClick={() => reGenerate()}>
-              Re-Gen
-            </WiredButton>
-            <CopyToClipboard text={password}
-              onCopy={() => setCopied(true)}>
-              <WiredButton className="btn-copy" elevation={2}>
-                Copy
+            <section>
+              <span className="toggle-kata">kata acak</span>
+              <WiredToggle
+                checked={isKata}
+                onChange={(e) => changeGenerator(e.detail.checked)}
+              />
+              <span className="toggle-kata">kata benda</span>
+              <div className="toggle-notes">{isKata ? 'beta version' : ''}</div>
+            </section>
+            <section>
+              <WiredInput
+                disabled={true}
+                placeholder="password here"
+                value={password}
+                ref={textInput}
+              />
+              <div className="copied">{copied ? 'copied' : ''}</div>
+            </section>
+            <section>
+              <WiredButton elevation={2} onClick={() => reGenerate()}>
+                Re-Gen
               </WiredButton>
-            </CopyToClipboard>
-          </section>
-          <div className="foot-notes">Copyright @ans4175</div>
+              <CopyToClipboard text={password} onCopy={() => setCopied(true)}>
+                <WiredButton className="btn-copy" elevation={2}>
+                  Copy
+                </WiredButton>
+              </CopyToClipboard>
+            </section>
+            <div className="foot-notes">Copyright @ans4175</div>
           </>
         )}
       </WiredCard>
