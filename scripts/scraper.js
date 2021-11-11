@@ -19,7 +19,7 @@ const ADJECTIVES_BASE_URL = "https://kbbi.kata.web.id/kelas-kata/kata-sifat";
   const nounPageNumbers = getFetchedPageNumbers(lastNounPageNumber);
 
   for (const pageNumber of nounPageNumbers) {
-    info(`noun page ${pageNumber}`);
+    console.info(`[info] scraping noun page ${pageNumber}...`);
 
     await page.goto(`${NOUNS_BASE_URL}/page/${pageNumber}`);
     const pageNouns = await getWordsFromPage(page);
@@ -38,7 +38,7 @@ const ADJECTIVES_BASE_URL = "https://kbbi.kata.web.id/kelas-kata/kata-sifat";
   const adjectivePageNumbers = getFetchedPageNumbers(lastAdjectivePageNumber);
 
   for (const pageNumber of adjectivePageNumbers) {
-    info(`adjective page ${pageNumber}`);
+    console.info(`[info] scraping adjective page ${pageNumber}...`);
 
     await page.goto(`${ADJECTIVES_BASE_URL}/page/${pageNumber}`);
     const pageAdjectives = await getWordsFromPage(page);
@@ -86,28 +86,26 @@ const NUMBER_OF_FETCHED_PAGES = 50;
 
 /**
  * Get the page numbers that will to be fetched.
- * In the scraped website, each page contains ~10 words.
  * @param {number} lastPageNumber last page number
  * @returns {number[]} array of page numbers
  */
 function getFetchedPageNumbers(lastPageNumber) {
+  // Create an array with size `lastPageNumber`, with the
+  // first array element being 1 and the last array element being `lastPageNumber`.
   const pages = Array.from(new Array(lastPageNumber)).map(
     (_el, idx) => idx + 1
   );
   const fetchedPageNumbers = [];
 
   while (fetchedPageNumbers.length < NUMBER_OF_FETCHED_PAGES) {
-    const pageIndex = Math.floor(Math.random() * pages.length + 1);
-    const pageNumber = pages[pageIndex];
+    // Get the array index.
+    // We will use it to get the page number and to splice the array.
+    const pageArrayIdx = Math.floor(Math.random() * pages.length);
+    const pageNumber = pages[pageArrayIdx];
 
     fetchedPageNumbers.push(pageNumber);
-    pages.splice(pageIndex, 1);
+    pages.splice(pageArrayIdx, 1);
   }
 
   return fetchedPageNumbers;
-}
-
-// A simple logger function.
-function info(message) {
-  console.info(`[info] scraping ${message}...`);
 }
