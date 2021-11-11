@@ -1,6 +1,7 @@
 const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
 const fs = require("fs/promises");
+const path = require("path");
 
 const NOUNS_BASE_URL = "https://kbbi.kata.web.id/kelas-kata/kata-benda";
 const ADJECTIVES_BASE_URL = "https://kbbi.kata.web.id/kelas-kata/kata-sifat";
@@ -16,7 +17,7 @@ const ADJECTIVES_BASE_URL = "https://kbbi.kata.web.id/kelas-kata/kata-sifat";
 
   const lastNounPageNumber = await getNumberOfLastPage(page);
   const nounPageNumbers = getFetchedPageNumbers(lastNounPageNumber);
-  console.log(lastNounPageNumber, nounPageNumbers);
+
   for (const pageNumber of nounPageNumbers) {
     info(`noun page ${pageNumber}`);
 
@@ -31,7 +32,7 @@ const ADJECTIVES_BASE_URL = "https://kbbi.kata.web.id/kelas-kata/kata-sifat";
   // Scrape adjectives.
   // `Set` is used because it guarantees uniqueness (whereas a normal Array doesn't).
   const adjectives = new Set();
-  await page.goto(NOUNS_BASE_URL);
+  await page.goto(ADJECTIVES_BASE_URL);
 
   const lastAdjectivePageNumber = await getNumberOfLastPage(page);
   const adjectivePageNumbers = getFetchedPageNumbers(lastAdjectivePageNumber);
@@ -47,10 +48,8 @@ const ADJECTIVES_BASE_URL = "https://kbbi.kata.web.id/kelas-kata/kata-sifat";
     }
   }
 
-  console.log({
-    nouns: Array.from(nouns),
-    adjectives: Array.from(adjectives),
-  });
+  // Save to local JSON file.
+  await fs.writeFile(process.cwd());
 
   await browser.close();
 })();
