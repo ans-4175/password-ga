@@ -49,8 +49,7 @@ const ADJECTIVES_BASE_URL = "https://kbbi.kata.web.id/kelas-kata/kata-sifat";
   }
 
   // Save to local JSON file.
-  await fs.writeFile(process.cwd());
-
+  await fs.writeFile(path.join(__dirname, '../src/words.json'));
   await browser.close();
 })();
 
