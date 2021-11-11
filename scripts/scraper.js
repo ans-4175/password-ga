@@ -109,6 +109,7 @@ async function getNumberOfLastPage(page) {
   return Number(lastPage.replace(',', ''));
 }
 
+// In kateglo site, each page contains ~50 words.
 // Reference: https://github.com/ans-4175/password-ga/issues/9#issuecomment-964749676.
 const NUMBER_OF_FETCHED_PAGES = 50;
 
