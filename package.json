@@ -39,6 +39,8 @@
     ]
   },
   "devDependencies": {
-    "prettier": "2.4.1"
+    "cheerio": "1.0.0-rc.10",
+    "prettier": "2.4.1",
+    "puppeteer": "11.0.0"
   }
 }

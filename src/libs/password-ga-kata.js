@@ -1,31 +1,7 @@
-const KATA_BENDA = [
-  'hotel',
-  'rumah',
-  'makam',
-  'botol',
-  'pisau',
-  'kerbau',
-  'meja',
-  'telepon',
-  'motor',
-  'gitar',
-  'pintu',
-  'kasur'
-];
-const KATA_SIFAT = [
-  'panas',
-  'dingin',
-  'hebat',
-  'bersih',
-  'sehat',
-  'mantap',
-  'jagoan',
-  'sakti',
-  'gila',
-  'nikmat',
-  'lemah',
-  'kuat'
-];
+import WORDS_JSON from '../words.json';
+
+const KATA_BENDA = WORDS_JSON.nouns;
+const KATA_SIFAT = WORDS_JSON.adjectives;
 
 const MUTATE_THRESHOLD_LETTERS = 0.9696;
 const MUTATE_THRESHOLD_SYMBOLS = 0.9696;
