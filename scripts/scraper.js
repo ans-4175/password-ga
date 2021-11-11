@@ -1,10 +1,10 @@
-const puppeteer = require("puppeteer");
-const cheerio = require("cheerio");
-const fs = require("fs/promises");
-const path = require("path");
+const puppeteer = require('puppeteer');
+const cheerio = require('cheerio');
+const fs = require('fs/promises');
+const path = require('path');
 
-const NOUNS_BASE_URL = "https://kbbi.kata.web.id/kelas-kata/kata-benda";
-const ADJECTIVES_BASE_URL = "https://kbbi.kata.web.id/kelas-kata/kata-sifat";
+const NOUNS_BASE_URL = 'https://kbbi.kata.web.id/kelas-kata/kata-benda';
+const ADJECTIVES_BASE_URL = 'https://kbbi.kata.web.id/kelas-kata/kata-sifat';
 
 (async () => {
   const browser = await puppeteer.launch();
@@ -49,40 +49,43 @@ const ADJECTIVES_BASE_URL = "https://kbbi.kata.web.id/kelas-kata/kata-sifat";
   }
 
   // Save to local JSON file.
-  await fs.writeFile(path.join(__dirname, '../src/words.json'));
+  await fs.writeFile(path.join(__dirname, '../src/words.json'), {
+    nouns: Array.from(nouns),
+    adjectives: Array.from(adjectives)
+  });
   await browser.close();
 })();
 
 // Helper functions.
 async function getWordsFromPage(page) {
-  const data = await page.evaluate(() => document.querySelector("*").outerHTML);
+  const data = await page.evaluate(() => document.querySelector('*').outerHTML);
 
   const $ = cheerio.load(data);
   const words = [];
 
-  $("dl > dt > a").each((_idx, element) => {
+  $('dl > dt > a').each((_idx, element) => {
     const word = cheerio.load(element.children[0]).text();
     // Clear parentheses (if any).
     // TODO(imballinst): check if we want to remove symbols such as hyphen as well.
-    words.push(word.replace(/[()]+/g, ""));
+    words.push(word.toLowerCase().replace(/[()]+/g, ''));
   });
 
   return words;
 }
 
 async function getNumberOfLastPage(page) {
-  const data = await page.evaluate(() => document.querySelector("*").outerHTML);
+  const data = await page.evaluate(() => document.querySelector('*').outerHTML);
   const $ = cheerio.load(data);
 
-  const lastPage = $("div.pagination > a.page-numbers:not(.next)")
+  const lastPage = $('div.pagination > a.page-numbers:not(.next)')
     .last()
     .text();
-  return Number(lastPage.replace(",", ""));
+  return Number(lastPage.replace(',', ''));
 }
 
 // At the moment, we settle for ~500 words.
 // Reference: https://github.com/ans-4175/password-ga/issues/9#issuecomment-964749676.
-const NUMBER_OF_FETCHED_PAGES = 50;
+const NUMBER_OF_FETCHED_PAGES = 5;
 
 /**
  * Get the page numbers that will to be fetched.
