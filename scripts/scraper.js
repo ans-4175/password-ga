@@ -109,7 +109,6 @@ async function getNumberOfLastPage(page) {
   return Number(lastPage.replace(',', ''));
 }
 
-// At the moment, we settle for ~500 words.
 // Reference: https://github.com/ans-4175/password-ga/issues/9#issuecomment-964749676.
 const NUMBER_OF_FETCHED_PAGES = 50;
 
