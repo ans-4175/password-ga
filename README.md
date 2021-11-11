@@ -14,8 +14,17 @@ yarn start
 Open at `localhost:3000`
 
 Look for files in
+
 - `src/App.js`
 - `libs/password-ga.js`
+
+## Scraping words
+
+To populate the list of words, we are using a scraper on http://kateglo.com. The scraper script can be found here: [./scripts/scraper.js](./scripts/scraper.js). To run the scraper, do this in the root project:
+
+```shell
+node scripts/scraper.js
+```
 
 ## Contributing
 
