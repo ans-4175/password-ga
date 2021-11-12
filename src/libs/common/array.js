@@ -16,7 +16,7 @@ export function pickOneRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-export const getMinMax = (arr) => {
+export function(arr) {
   let min = arr[0];
   let max = arr[0];
   let i = arr.length;
