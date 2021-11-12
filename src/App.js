@@ -12,8 +12,6 @@ import { demutatePassword } from './libs/mutation-common';
 
 import './App.css';
 
-const PICKED_PASSWORD_COUNT = 1;
-
 function App() {
   const boxCard = useRef({});
   const textInput = useRef({});
@@ -26,11 +24,14 @@ function App() {
   const reGenerate = async (isGenerateKata) => {
     setPasswordLoaded(false);
     const generateFunction = isGenerateKata ? generateKata : generateAcak;
-    const res = await generateFunction({ pickCount: PICKED_PASSWORD_COUNT });
+    const res = await generateFunction({});
     if (res.length) {
       let password = '';
       let pronunciation = '';
 
+      // Different behavior is needed for random letters and random words.
+      // For random words, we need to "separate" the noun and adjective
+      // before demutating, so that we can add a space between them.
       if (isGenerateKata) {
         const [mutatedNoun, mutatedAdjective] = res;
         password = `${mutatedNoun}${mutatedAdjective}`;
@@ -51,18 +52,20 @@ function App() {
   };
 
   const changeGenerator = (isRight) => {
-    setIsKata(isRight ? true : false);
+    setIsKata(isRight);
   };
 
   const onCopyPassword = () => {
     setCopied(true);
 
+    // Set 2 seconds timeout before the button goes back to "Copy" from "Copied!".
     setTimeout(() => {
       setCopied(false);
     }, 2000);
   };
 
   useEffect(() => {
+    // Automatically regenerate password when the toggle changes.
     reGenerate(isKata);
   }, [isKata]);
 
