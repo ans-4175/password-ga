@@ -77,7 +77,7 @@ function App() {
                 </WiredButton>
               </CopyToClipboard>
             </section>
-            <div className="foot-notes">Copyright @ans4175</div>
+            <div className="foot-notes">Copyright @ans4175 &amp; @ajiballinst </div>
           </>
         )}
       </WiredCard>
