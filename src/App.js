@@ -12,12 +12,23 @@ import { demutatePassword } from './libs/common';
 
 import './App.css';
 
+// When appended with an additional query parameter &phrase={word},
+// it will open a page containing the word's type and meaning.
+const KATEGLO_WORD_BASE_URL = 'http://kateglo.com/?mod=dictionary&action=view';
+
 function App() {
   const boxCard = useRef({});
   const textInput = useRef({});
   const [password, setPassword] = useState('');
   const [passwordLoaded, setPasswordLoaded] = useState(false);
-  const [pronunciation, setPronunciation] = useState('');
+  // The idea of showing pronunciation comes from the original idea of this app,
+  // which is to make randomized password easier to pronounce. When the randomized
+  // password is composed of "noun" + "adjective", then we will also give it link
+  // to kateglo, using the `KATEGLO_WORD_BASE_URL` variable.
+  //
+  // The type of this state is Array<{ word: string; link?: string }>.
+  // The `link` field is only be defined when we are generating password of noun + adjective.
+  const [pronunciation, setPronunciation] = useState([]);
   const [copied, setCopied] = useState(false);
   const [isKata, setIsKata] = useState(false);
 
@@ -93,7 +104,10 @@ function App() {
                 value={password}
                 ref={textInput}
               />
-              <div>{pronunciation}</div>
+              <div>
+                <span className="pronunciation">Pelafalan: </span>
+                {pronunciation}
+              </div>
             </section>
             <section>
               <WiredButton elevation={2} onClick={() => reGenerate(isKata)}>

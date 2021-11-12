@@ -50,6 +50,10 @@ wired-input {
   color: darkorange;
 }
 
+.pelafalan {
+  font-weight: 700;
+}
+
 .foot-notes {
   font-size: 0.65em;
   color: grey;
