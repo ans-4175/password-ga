@@ -11,19 +11,21 @@ import generateKata from './libs/password-ga-kata';
 
 import './App.css';
 
+const PICKED_PASSWORD_COUNT = 1;
+
 function App() {
   const boxCard = useRef({});
   const textInput = useRef({});
-  const [password, setPassword] = useState([]);
+  const [password, setPassword] = useState('');
   const [passwordLoaded, setPasswordLoaded] = useState(false);
   const [copied, setCopied] = useState(false);
   const [isKata, setIsKata] = useState(false);
 
-  const reGenerate = async () => {
+  const reGenerate = async (isGenerateKata) => {
     setPasswordLoaded(false);
     setCopied(false);
-    const generateFunction = isKata ? generateKata : generateAcak;
-    const res = await generateFunction({});
+    const generateFunction = isGenerateKata ? generateKata : generateAcak;
+    const res = await generateFunction({ pickCount: PICKED_PASSWORD_COUNT });
     if (res.length) {
       setPassword(res[0]);
       setPasswordLoaded(true);
@@ -33,13 +35,12 @@ function App() {
   };
 
   const changeGenerator = (isRight) => {
-    setIsKata(isRight ? true : false);
+    setIsKata(isRight);
   };
 
   useEffect(() => {
-    reGenerate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    reGenerate(isKata);
+  }, [isKata]);
 
   return (
     <main>
@@ -68,7 +69,7 @@ function App() {
               <div className="copied">{copied ? 'copied' : ''}</div>
             </section>
             <section>
-              <WiredButton elevation={2} onClick={() => reGenerate()}>
+              <WiredButton elevation={2} onClick={() => reGenerate(isKata)}>
                 Re-Gen
               </WiredButton>
               <CopyToClipboard text={password} onCopy={() => setCopied(true)}>
