@@ -50,7 +50,7 @@ function App() {
     boxCard.current.requestUpdate();
   };
 
-  const changeGenerator = async (isRight) => {
+  const changeGenerator = (isRight) => {
     setIsKata(isRight ? true : false);
   };
 
