@@ -1,11 +1,12 @@
-import { pickNRandom, pickOneRandom } from './array-common';
 import {
+  pickNRandom,
+  pickOneRandom,
   getMinMax,
   mutate,
   mutationCases,
   mutationLetters,
   mutationSymbols
-} from './mutation-common';
+} from './common';
 
 import WORDS_JSON from '../words.json';
 
