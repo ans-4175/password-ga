@@ -16,7 +16,7 @@ export function pickOneRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-export function(arr) {
+export function getMinMax(arr) {
   let min = arr[0];
   let max = arr[0];
   let i = arr.length;
@@ -26,4 +26,4 @@ export function(arr) {
     max = arr[i] > max ? arr[i] : max;
   }
   return { min, max };
-};
+}
