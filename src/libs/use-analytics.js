@@ -1,17 +1,17 @@
-import React from "react"
-import { useLocation } from "react-router-dom"
+import React from 'react';
+import { useLocation } from 'react-router-dom';
 
-import analytics from "./ga-analytics"
+const { init, sendPageview } = require('./ga-analytics');
 
 export default function useGoogleAnalytics() {
-  const location = useLocation()
+  const location = useLocation();
 
   React.useEffect(() => {
-    analytics.init()
-  }, [])
+    init();
+  }, []);
 
   React.useEffect(() => {
-    const currentPath = location.pathname + location.search
-    analytics.sendPageview(currentPath)
-  }, [location])
+    const currentPath = location.pathname + location.search;
+    sendPageview(currentPath);
+  }, [location]);
 }
