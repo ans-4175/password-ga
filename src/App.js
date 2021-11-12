@@ -19,10 +19,10 @@ function App() {
   const [copied, setCopied] = useState(false);
   const [isKata, setIsKata] = useState(false);
 
-  const reGenerate = async (isGenerateKata) => {
+  const reGenerate = async () => {
     setPasswordLoaded(false);
     setCopied(false);
-    const generateFunction = isGenerateKata ? generateKata : generateAcak;
+    const generateFunction = isKata ? generateKata : generateAcak;
     const res = await generateFunction({});
     if (res.length) {
       setPassword(res[0]);
@@ -37,8 +37,9 @@ function App() {
   };
 
   useEffect(() => {
-    reGenerate(isKata);
-  }, [isKata]);
+    reGenerate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <main>
@@ -67,7 +68,7 @@ function App() {
               <div className="copied">{copied ? 'copied' : ''}</div>
             </section>
             <section>
-              <WiredButton elevation={2} onClick={() => reGenerate(isKata)}>
+              <WiredButton elevation={2} onClick={reGenerate}>
                 Re-Gen
               </WiredButton>
               <CopyToClipboard text={password} onCopy={() => setCopied(true)}>
