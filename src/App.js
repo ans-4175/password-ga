@@ -10,6 +10,8 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import generateAcak from './libs/password-ga';
 import generateKata from './libs/password-ga-kata';
 import { demutatePassword } from './libs/common';
+import useGoogleAnalytics from './libs/use-analytics';
+import { sendEvent } from './libs/ga-analytics';
 
 import './App.css';
 
@@ -18,6 +20,8 @@ import './App.css';
 const KATEGLO_WORD_BASE_URL = 'http://kateglo.com/?mod=dictionary&action=view';
 
 function App() {
+  useGoogleAnalytics();
+
   const boxCard = useRef({});
   const textInput = useRef({});
   const [password, setPassword] = useState('');
@@ -69,12 +73,24 @@ function App() {
       setPronunciations(newPronunciations);
       setPasswordLoaded(true);
       textInput.current.value = newPassword;
+
+      sendEvent({
+        category: 'interaction',
+        action: `regenerate`,
+        label: isGenerateKata ? 'kata_benda' : 'kata_acak'
+      });
     }
     boxCard.current.requestUpdate();
   };
 
   const changeGenerator = (isRight) => {
     setIsKata(isRight);
+
+    sendEvent({
+      category: 'interaction',
+      action: `toggle`,
+      label: isRight ? 'kata_benda' : 'kata_acak'
+    });
   };
 
   const onCopyPassword = () => {
@@ -84,6 +100,21 @@ function App() {
     setTimeout(() => {
       setCopied(false);
     }, 2000);
+
+    sendEvent({
+      category: 'interaction',
+      action: `button`,
+      label: 'copy'
+    });
+  };
+
+  const onButtonRegen = (isKata) => {
+    reGenerate(isKata);
+    sendEvent({
+      category: 'interaction',
+      action: `button`,
+      label: 'regen'
+    });
   };
 
   useEffect(() => {
@@ -119,14 +150,14 @@ function App() {
                 <span className="pronunciation-label">Pelafalan: </span>
 
                 <div className="pronunciation-values">
-                  {pronunciations.map((pronunciation) => (
-                    <Pronunciation {...pronunciation} />
+                  {pronunciations.map((pronunciation, key) => (
+                    <Pronunciation key={key} {...pronunciation} />
                   ))}
                 </div>
               </div>
             </section>
             <section>
-              <WiredButton elevation={2} onClick={() => reGenerate(isKata)}>
+              <WiredButton elevation={2} onClick={() => onButtonRegen(isKata)}>
                 Re-Gen
               </WiredButton>
               <CopyToClipboard text={password} onCopy={onCopyPassword}>
