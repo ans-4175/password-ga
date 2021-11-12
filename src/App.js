@@ -19,7 +19,7 @@ function App() {
   const textInput = useRef({});
   const [password, setPassword] = useState('');
   const [passwordLoaded, setPasswordLoaded] = useState(false);
-  const [pronounciation, setPronounciation] = useState('');
+  const [pronunciation, setPronunciation] = useState('');
   const [copied, setCopied] = useState(false);
   const [isKata, setIsKata] = useState(false);
 
@@ -29,21 +29,21 @@ function App() {
     const res = await generateFunction({ pickCount: PICKED_PASSWORD_COUNT });
     if (res.length) {
       let password = '';
-      let pronounciation = '';
+      let pronunciation = '';
 
       if (isGenerateKata) {
         const [mutatedNoun, mutatedAdjective] = res;
         password = `${mutatedNoun}${mutatedAdjective}`;
-        pronounciation = `${demutatePassword(mutatedNoun)} ${demutatePassword(
+        pronunciation = `${demutatePassword(mutatedNoun)} ${demutatePassword(
           mutatedAdjective
         )}`;
       } else {
         password = res[0];
-        pronounciation = demutatePassword(password);
+        pronunciation = demutatePassword(password);
       }
 
       setPassword(password);
-      setPronounciation(pronounciation.toLowerCase());
+      setPronunciation(pronunciation.toLowerCase());
       setPasswordLoaded(true);
       textInput.current.value = password;
     }
@@ -90,7 +90,7 @@ function App() {
                 value={password}
                 ref={textInput}
               />
-              <div>{pronounciation}</div>
+              <div>{pronunciation}</div>
             </section>
             <section>
               <WiredButton elevation={2} onClick={() => reGenerate(isKata)}>
