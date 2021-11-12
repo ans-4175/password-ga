@@ -8,9 +8,9 @@ import {
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import generateAcak from './libs/password-ga';
 import generateKata from './libs/password-ga-kata';
+import { demutatePassword } from './libs/mutation-common';
 
 import './App.css';
-import { demutatePassword } from './libs/mutation-common';
 
 const PICKED_PASSWORD_COUNT = 1;
 
