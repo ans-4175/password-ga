@@ -17,18 +17,6 @@ export const mutationCases = (gene, condition = true) => {
   }
 };
 
-export const getMinMax = (arr) => {
-  let min = arr[0];
-  let max = arr[0];
-  let i = arr.length;
-
-  while (i--) {
-    min = arr[i] < min ? arr[i] : min;
-    max = arr[i] > max ? arr[i] : max;
-  }
-  return { min, max };
-};
-
 // Number mutations.
 const LETTER_TO_NUMBER_MUTATIONS = {
   i: 1,
