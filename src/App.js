@@ -10,36 +10,61 @@ import generateAcak from './libs/password-ga';
 import generateKata from './libs/password-ga-kata';
 
 import './App.css';
+import { demutatePassword } from './libs/mutation-common';
+
+const PICKED_PASSWORD_COUNT = 1;
 
 function App() {
   const boxCard = useRef({});
   const textInput = useRef({});
-  const [password, setPassword] = useState([]);
+  const [password, setPassword] = useState('');
   const [passwordLoaded, setPasswordLoaded] = useState(false);
+  const [pronounciation, setPronounciation] = useState('');
   const [copied, setCopied] = useState(false);
   const [isKata, setIsKata] = useState(false);
 
-  const reGenerate = async () => {
+  const reGenerate = async (isGenerateKata) => {
     setPasswordLoaded(false);
-    setCopied(false);
-    const generateFunction = isKata ? generateKata : generateAcak;
-    const res = await generateFunction({});
+    const generateFunction = isGenerateKata ? generateKata : generateAcak;
+    const res = await generateFunction({ pickCount: PICKED_PASSWORD_COUNT });
     if (res.length) {
-      setPassword(res[0]);
+      let password = '';
+      let pronounciation = '';
+
+      if (isGenerateKata) {
+        const [mutatedNoun, mutatedAdjective] = res;
+        password = `${mutatedNoun}${mutatedAdjective}`;
+        pronounciation = `${demutatePassword(mutatedNoun)} ${demutatePassword(
+          mutatedAdjective
+        )}`;
+      } else {
+        password = res[0];
+        pronounciation = demutatePassword(password);
+      }
+
+      setPassword(password);
+      setPronounciation(pronounciation.toLowerCase());
       setPasswordLoaded(true);
-      textInput.current.value = res[0];
+      textInput.current.value = password;
     }
     boxCard.current.requestUpdate();
   };
 
-  const changeGenerator = (isRight) => {
+  const changeGenerator = async (isRight) => {
     setIsKata(isRight ? true : false);
   };
 
+  const onCopyPassword = () => {
+    setCopied(true);
+
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+  };
+
   useEffect(() => {
-    reGenerate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    reGenerate(isKata);
+  }, [isKata]);
 
   return (
     <main>
@@ -65,15 +90,15 @@ function App() {
                 value={password}
                 ref={textInput}
               />
-              <div className="copied">{copied ? 'copied' : ''}</div>
+              <div>{pronounciation}</div>
             </section>
             <section>
-              <WiredButton elevation={2} onClick={() => reGenerate()}>
+              <WiredButton elevation={2} onClick={() => reGenerate(isKata)}>
                 Re-Gen
               </WiredButton>
-              <CopyToClipboard text={password} onCopy={() => setCopied(true)}>
+              <CopyToClipboard text={password} onCopy={onCopyPassword}>
                 <WiredButton className="btn-copy" elevation={2}>
-                  Copy
+                  {copied ? 'Copied!' : 'Copy'}
                 </WiredButton>
               </CopyToClipboard>
             </section>

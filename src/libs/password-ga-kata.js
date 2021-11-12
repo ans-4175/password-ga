@@ -1,3 +1,12 @@
+import { pickNRandom, pickOneRandom } from './array-common';
+import {
+  getMinMax,
+  mutate,
+  mutationCases,
+  mutationLetters,
+  mutationSymbols
+} from './mutation-common';
+
 import WORDS_JSON from '../words.json';
 
 const KATA_BENDA = WORDS_JSON.nouns;
@@ -7,36 +16,6 @@ const MUTATE_THRESHOLD_LETTERS = 0.9696;
 const MUTATE_THRESHOLD_SYMBOLS = 0.9696;
 const MUTATE_THRESHOLD_CASES = 0.8686;
 const GENERATION_THRESHOLD_FITNESS = 0;
-
-const pickOneRandom = (arr) => {
-  return arr[Math.floor(Math.random() * arr.length)];
-};
-
-function pickNRandom(arr, n) {
-  let result = new Array(n),
-    len = arr.length,
-    taken = new Array(len);
-  if (n > len)
-    throw new RangeError('getRandom: more elements taken than available');
-  while (n--) {
-    const x = Math.floor(Math.random() * len);
-    result[n] = arr[x in taken ? taken[x] : x];
-    taken[x] = --len in taken ? taken[len] : len;
-  }
-  return result;
-}
-
-const getMinMax = (arr) => {
-  let min = arr[0];
-  let max = arr[0];
-  let i = arr.length;
-
-  while (i--) {
-    min = arr[i] < min ? arr[i] : min;
-    max = arr[i] > max ? arr[i] : max;
-  }
-  return { min, max };
-};
 
 // ===IMPLEMENTED FUNCTION
 
@@ -93,75 +72,6 @@ const survivalFittest = (population, maxPopulation) => {
       return checkFitnessScore(b.join('')) - checkFitnessScore(a.join(''));
     })
     .slice(0, maxPopulation);
-};
-
-const mutate = (chromosome, threshold, mutateFunction) => {
-  return chromosome
-    .split('')
-    .map((gene) => {
-      return Math.random() < threshold
-        ? mutateFunction(gene, false)
-        : mutateFunction(gene, true);
-    })
-    .join('');
-};
-
-const mutationCases = (gene, condition = true) => {
-  if (condition) {
-    return gene.toUpperCase();
-  } else {
-    return gene.toLowerCase();
-  }
-};
-
-const mutationLetters = (gene, condition = true) => {
-  if (condition) {
-    switch (gene.toLowerCase()) {
-      case 'i':
-        return '1';
-      case 'r':
-        return '2';
-      case 'e':
-        return '3';
-      case 'a':
-        return '4';
-      case 's':
-        return '5';
-      case 'g':
-        return '6';
-      case 'z':
-        return '7';
-      case 'b':
-        return '8';
-      case 'q':
-        return '9';
-      default:
-        return gene;
-    }
-  } else {
-    return gene;
-  }
-};
-
-const mutationSymbols = (gene, condition = true) => {
-  if (condition) {
-    switch (gene.toLowerCase()) {
-      case 'i':
-        return '!';
-      case 'a':
-        return '@';
-      case 's':
-        return '$';
-      case 'o':
-        return '*';
-      case 'p':
-        return '?';
-      default:
-        return gene;
-    }
-  } else {
-    return gene;
-  }
 };
 
 const geneticProcess = (firstGenes, secondGenes) => {
@@ -255,7 +165,7 @@ const generatePasswords = ({
     // currGeneration++;
   }
   // pick population
-  return pickNRandom(population, pickCount).map((chrom) => chrom.join(''));
+  return pickNRandom(population, pickCount).flat();
 };
 
 // module.exports = generatePasswords;
