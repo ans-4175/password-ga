@@ -50,6 +50,21 @@ wired-input {
   color: darkorange;
 }
 
+.pronunciation {
+  display: flex;
+  justify-content: center;
+}
+
+.pronunciation-label {
+  font-weight: 700;
+  margin-right: 8px;
+}
+
+/* Add left margin for the words, if more than 1. */
+.pronunciation-values > *:not(:first-child) {
+  margin-left: 8px;
+}
+
 .foot-notes {
   font-size: 0.65em;
   color: grey;

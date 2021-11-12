@@ -166,7 +166,7 @@ const generatePasswords = ({
     // currGeneration++;
   }
   // pick population
-  return pickNRandom(population, pickCount).map((chrom) => chrom.join(''));
+  return pickNRandom(population, pickCount).flat();
 };
 
 // module.exports = generatePasswords;
