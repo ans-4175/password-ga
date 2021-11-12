@@ -11,8 +11,6 @@ import generateKata from './libs/password-ga-kata';
 
 import './App.css';
 
-const PICKED_PASSWORD_COUNT = 1;
-
 function App() {
   const boxCard = useRef({});
   const textInput = useRef({});
@@ -25,7 +23,7 @@ function App() {
     setPasswordLoaded(false);
     setCopied(false);
     const generateFunction = isGenerateKata ? generateKata : generateAcak;
-    const res = await generateFunction({ pickCount: PICKED_PASSWORD_COUNT });
+    const res = await generateFunction({});
     if (res.length) {
       setPassword(res[0]);
       setPasswordLoaded(true);
