@@ -94,7 +94,7 @@ export const demutatePassword = (chromosome) => {
     return gene;
   });
 
-  return demutated.join('');
+  return demutated.join('').toLowerCase();
 };
 
 // Helper functions.
