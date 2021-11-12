@@ -14,7 +14,7 @@ import './App.css';
 function App() {
   const boxCard = useRef({});
   const textInput = useRef({});
-  const [password, setPassword] = useState([]);
+  const [password, setPassword] = useState('');
   const [passwordLoaded, setPasswordLoaded] = useState(false);
   const [copied, setCopied] = useState(false);
   const [isKata, setIsKata] = useState(false);
@@ -33,7 +33,7 @@ function App() {
   };
 
   const changeGenerator = (isRight) => {
-    setIsKata(isRight ? true : false);
+    setIsKata(isRight);
   };
 
   useEffect(() => {
@@ -68,7 +68,7 @@ function App() {
               <div className="copied">{copied ? 'copied' : ''}</div>
             </section>
             <section>
-              <WiredButton elevation={2} onClick={() => reGenerate()}>
+              <WiredButton elevation={2} onClick={reGenerate}>
                 Re-Gen
               </WiredButton>
               <CopyToClipboard text={password} onCopy={() => setCopied(true)}>
