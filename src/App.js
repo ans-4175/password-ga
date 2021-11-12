@@ -77,7 +77,7 @@ function App() {
       sendEvent({
         category: 'interaction',
         action: `regenerate`,
-        label: (isGenerateKata) ? 'kata_benda' : 'kata_acak'
+        label: isGenerateKata ? 'kata_benda' : 'kata_acak'
       });
     }
     boxCard.current.requestUpdate();
@@ -89,7 +89,7 @@ function App() {
     sendEvent({
       category: 'interaction',
       action: `toggle`,
-      label: (isRight) ? 'kata_benda' : 'kata_acak'
+      label: isRight ? 'kata_benda' : 'kata_acak'
     });
   };
 
@@ -115,7 +115,7 @@ function App() {
       action: `button`,
       label: 'regen'
     });
-  }
+  };
 
   useEffect(() => {
     // Automatically regenerate password when the toggle changes.
